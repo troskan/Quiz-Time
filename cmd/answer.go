@@ -4,7 +4,12 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 
 	"github.com/spf13/cobra"
 )
@@ -15,15 +20,36 @@ var answerCmd = &cobra.Command{
 	Short: "Request user input for question.",
 	Long: `Answer will request a user input for question. Only one answer is correct and only one input is allowed.`,
 	Run: func(cmd *cobra.Command, args []string) {
-var answer string
+		var answer string
 
-		fmt.Println("Please enter the number of the answer to send answer.")
-		_, err := fmt.Scanln(answer)
+		fmt.Println("Please enter the number of the answer to send the answer.")
+	
+		_, err := fmt.Scanln(&answer)
 		if err != nil {
 			fmt.Println("Error reading input:", err)
 		}
+	
+		fmt.Println("Your answer is:", answer)
+		answerObj := map[string]string{
+			"id":     "1",  // We assume the question id is 1 for now
+			"answer": answer,
+		}
+		jsonValue, _ := json.Marshal(answerObj)
+		resp, err := http.Post("http://localhost:8080/answer", "application/json", bytes.NewBuffer(jsonValue))
 
-		  fmt.Println("Your answer is: ", answer)
+		if err != nil {
+				log.Fatalln(err)
+		}
+		
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+				log.Fatalln(err)
+		}
+		
+		fmt.Printf("Response: %s\n", body)
+		defer resp.Body.Close()
+
+		
 
 	},
 }

@@ -12,10 +12,15 @@ type Question struct {
 	ID      string   `json:"id"`
 	Text    string   `json:"text"`
 	Choices []string `json:"choices"`
+	CorrectAnswer string `json:"correctAnswer"`
+}
+type Answer struct {
+	ID      string   `json:"id"`
+	Answer  string   `json:"answer"`
 }
 
 var questions = []Question{
-	{ID: "1", Text: "What is the capital of France?", Choices: []string{"Paris", "Berlin", "London", "Rome"}},
+	{ID: "1", Text: "What is the capital of France?", Choices: []string{"Paris", "Berlin", "London", "Rome"}, CorrectAnswer: "Paris"},
 	// add more questions
 }
 
@@ -30,7 +35,31 @@ func GetQuestions(w http.ResponseWriter, r *http.Request) {
 }
 
 func SubmitAnswers(w http.ResponseWriter, r *http.Request) {
-	// TODO: implement
+	fmt.Println("Received a request for answers")
+
+	var answer Answer
+
+	err := json.NewDecoder(r.Body).Decode(&answer)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	fmt.Println("Error")
+		return
+	}
+	fmt.Println("Checking if correct answer...")
+
+	for _, v := range questions {
+		if answer.ID == v.ID  && answer.Answer == v.CorrectAnswer{
+			fmt.Println("Correct answer!")
+
+			fmt.Fprintf(w, "Correct answer!\n")
+			
+			} else{
+				fmt.Fprintf(w, "Wrong answer! Correct answer was: %s\n", v.CorrectAnswer)
+	fmt.Println("Wrong answer...")
+
+			}
+		
+	}
 }
 
 func GetResults(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +73,7 @@ func GetPerformance(w http.ResponseWriter, r *http.Request) {
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/questions", GetQuestions).Methods("GET")
-	router.HandleFunc("/answers", SubmitAnswers).Methods("POST")
+	router.HandleFunc("/answer", SubmitAnswers).Methods("POST")
 	router.HandleFunc("/results/{userID}", GetResults).Methods("GET")
 	router.HandleFunc("/performance/{userID}", GetPerformance).Methods("GET")
 
