@@ -27,12 +27,18 @@ type Answer struct {
 }
 
 var questions = []Question{
-	{ID: "1", Text: "What is the capital of France?", Choices: []string{"Paris", "Berlin", "London", "Rome"}, CorrectAnswer: "Paris"},
+	{ID: "1", Text: "Which company does not produce chainsaws? ", Choices: []string{"Husqvarna", "Partner", "Stihl", "Yamaha"}, CorrectAnswer: "Yamaha"},
+
+	{ID: "2", Text: "Marathon Des Sables is a extreme marathon in the desert, how far is the race distance?", Choices: []string{"150 km", "200 km", "250 km", "300 km"}, CorrectAnswer: "250"},
+	
+	{ID: "3", Text: "How old is Bill Gates?", Choices: []string{"67", "72", "75", "78"}, CorrectAnswer: "67"},
 	// add more questions
 }
 
 var answers = map[string]string{
 	"1": "Paris",
+	"2": "Paris",
+	"3": "Paris",
 	// add more answers
 }
 

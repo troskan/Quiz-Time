@@ -30,11 +30,17 @@ var questionCmd = &cobra.Command{
 		}
 
 		for _, question := range questions {
-			fmt.Printf("Question: %s\n", question.Text)
+			fmt.Println()  // Newline after each question
+			fmt.Println()  // Newline after each question
+
+			fmt.Printf("? Question: %s\n", question.Text)
+
 			for i, choice := range question.Choices {
-				fmt.Printf("#%d: %s\n", i+1, choice)
+				fmt.Printf("\033[32m#%d:\033[0m %s ", i+1, choice)  // Green for #ID and normal for choice
+
 			}
 		}
+		
 	},
 }
 
