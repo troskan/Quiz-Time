@@ -14,6 +14,13 @@ type Question struct {
 	Choices []string `json:"choices"`
 	CorrectAnswer string `json:"correctAnswer"`
 }
+
+type PublicQuestion struct {
+	ID      string   `json:"id"`
+	Text    string   `json:"text"`
+	Choices []string `json:"choices"`
+}
+
 type Answer struct {
 	ID      string   `json:"id"`
 	Answer  string   `json:"answer"`
@@ -29,9 +36,17 @@ var answers = map[string]string{
 	// add more answers
 }
 
+
 func GetQuestions(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received a request for questions")
-	json.NewEncoder(w).Encode(questions)
+	
+	//Hide correct answer
+	var publicQuestions []PublicQuestion
+	for _, v := range questions {
+		publicQuestions = append(publicQuestions, PublicQuestion{ID: v.ID, Text: v.Text, Choices: v.Choices})
+	}
+
+	json.NewEncoder(w).Encode(publicQuestions)
 }
 
 func SubmitAnswers(w http.ResponseWriter, r *http.Request) {
